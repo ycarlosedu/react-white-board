@@ -20,12 +20,17 @@ import ReactFlow, {
 
 import 'reactflow/dist/style.css';
 import '@reactflow/node-resizer/dist/style.css';
-import { Square } from './Square';
-import { Circle } from './Circle';
-import { DefaultEdge } from './DefaultEdge';
+import { Square } from './Nodes/Square';
+import { Circle } from './Nodes/Circle';
+import { DefaultEdge } from './Edges/DefaultEdge';
+import { SmoothEdge } from './Edges/SmoothEdge';
+import { StraightEdge } from './Edges/StraightEdge';
+import NodeInMouse from './NodeInMouse';
+
+export type NodesTypes = keyof typeof NODE_TYPES
 
 interface InitialNode extends Node {
-  type: keyof typeof NODE_TYPES
+  type: NodesTypes
 }
 
 const initialNodes: InitialNode[] = [
@@ -57,16 +62,17 @@ const NODE_TYPES = {
   circle: Circle,
 }
 
-type NodesTypes = keyof typeof NODE_TYPES
-
 const EDGE_TYPES = {
   default: DefaultEdge,
+  smooth: SmoothEdge,
+  straight: StraightEdge,
 }
 
 export function Canvas() {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const [nodeTypeSelected, setNodeTypeSelected] = useState<NodesTypes | undefined>(undefined);
+  const [mousePosition, setMousePosition] = useState<{ top: number; left: number; }>();
   
   const reactFlowRef = useRef<any>()
   const reactFlowInstance = useReactFlow()
@@ -105,7 +111,6 @@ export function Canvas() {
   }
 
   function handleAddNode(event: any) {
-    console.log(getCoordinates(event))
     if (!nodeTypeSelected) return
 
     setNodes((nodes) => {
@@ -123,6 +128,13 @@ export function Canvas() {
     setNodeTypeSelected(type)
   }
 
+  function handleMouseMove(event: any) {
+    setMousePosition({
+      top: event.clientY,
+      left: event.clientX
+    })
+  }
+
   return (
     <>
       <ReactFlow
@@ -137,19 +149,20 @@ export function Canvas() {
         onConnect={onConnect}
         connectionMode={ConnectionMode.Loose}
         defaultEdgeOptions={{
-          type: 'default'
+          type: 'smooth'
         }}
         onPaneClick={handleAddNode}
+        onMouseMove={handleMouseMove}
       >
         <Controls /> 
         <Background gap={12} size={2} color={zinc['200']} />
       </ReactFlow>
 
+      <NodeInMouse position={mousePosition} element={nodeTypeSelected} />
+
       <Toolbar.Root className="fixed bottom-10 flex gap-2 left-1/2 -translate-x-1/2 bg-white rounded-2xl shadow-lg border border-zinc-300 px-8 h-20 w-auto overflow-hidden">
-        <Toolbar.Button onClick={() => handleSelectNewNode('square')} className="text-zinc-400 w-32 h-32 bg-violet-500 mt-6 rounded hover:-translate-y-2 transition-transform">
-        </Toolbar.Button>
-        <Toolbar.Button onClick={() => handleSelectNewNode('circle')} className="text-zinc-400 w-32 h-32 bg-blue-500 mt-6 rounded-full hover:-translate-y-2 transition-transform">
-        </Toolbar.Button>
+        <Toolbar.Button onClick={() => handleSelectNewNode('square')} className="text-zinc-400 w-32 h-32 bg-violet-500 mt-6 rounded hover:-translate-y-2 transition-transform" />
+        <Toolbar.Button onClick={() => handleSelectNewNode('circle')} className="text-zinc-400 w-32 h-32 bg-blue-500 mt-6 rounded-full hover:-translate-y-2 transition-transform" />
       </Toolbar.Root>
     </>
   );
