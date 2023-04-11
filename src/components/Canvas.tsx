@@ -1,6 +1,5 @@
 import { useCallback, useRef, useState } from 'react';
 import * as Toolbar from '@radix-ui/react-toolbar';
-import { Square as SquareIcon } from 'phosphor-react'
 import { zinc } from 'tailwindcss/colors'
 
 import ReactFlow, {
@@ -22,6 +21,7 @@ import ReactFlow, {
 import 'reactflow/dist/style.css';
 import '@reactflow/node-resizer/dist/style.css';
 import { Square } from './Square';
+import { Circle } from './Circle';
 import { DefaultEdge } from './DefaultEdge';
 
 interface InitialNode extends Node {
@@ -54,6 +54,7 @@ const initialEdges: Edge[] = [
 
 const NODE_TYPES = {
   square: Square,
+  circle: Circle,
 }
 
 type NodesTypes = keyof typeof NODE_TYPES
@@ -144,9 +145,10 @@ export function Canvas() {
         <Background gap={12} size={2} color={zinc['200']} />
       </ReactFlow>
 
-      <Toolbar.Root className="fixed bottom-20 left-1/2 -translate-x-1/2 bg-white rounded-2xl shadow-lg border border-zinc-300 px-8 h-20 w-96 overflow-hidden">
-        <Toolbar.Button onClick={() => handleSelectNewNode('square')} className="text-zinc-400">
-          <div className="w-32 h-32 bg-violet-500 mt-6 rounded hover:-translate-y-2 transition-transform"></div>
+      <Toolbar.Root className="fixed bottom-10 flex gap-2 left-1/2 -translate-x-1/2 bg-white rounded-2xl shadow-lg border border-zinc-300 px-8 h-20 w-auto overflow-hidden">
+        <Toolbar.Button onClick={() => handleSelectNewNode('square')} className="text-zinc-400 w-32 h-32 bg-violet-500 mt-6 rounded hover:-translate-y-2 transition-transform">
+        </Toolbar.Button>
+        <Toolbar.Button onClick={() => handleSelectNewNode('circle')} className="text-zinc-400 w-32 h-32 bg-blue-500 mt-6 rounded-full hover:-translate-y-2 transition-transform">
         </Toolbar.Button>
       </Toolbar.Root>
     </>
