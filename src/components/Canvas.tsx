@@ -14,6 +14,9 @@ import ReactFlow, {
   ConnectionMode,
   Connection,
   useReactFlow,
+  getIncomers,
+  getOutgoers,
+  getConnectedEdges,
 } from 'reactflow';
 
 import 'reactflow/dist/style.css';
@@ -71,6 +74,27 @@ export function Canvas() {
     return setEdges((eds) => addEdge(params, eds))
   }, [setEdges]);
 
+  const onNodesDelete = useCallback(
+    (deleted: Node[]) => {
+      setEdges(
+        deleted.reduce((acc, node) => {
+          const incomers = getIncomers(node, nodes, edges);
+          const outgoers = getOutgoers(node, nodes, edges);
+          const connectedEdges = getConnectedEdges([node], edges);
+
+          const remainingEdges = acc.filter((edge: Edge) => !connectedEdges.includes(edge));
+
+          const createdEdges = incomers.flatMap(({ id: source }) =>
+            outgoers.map(({ id: target }) => ({ id: `${source}->${target}`, source, target }))
+          );
+
+          return [...remainingEdges, ...createdEdges];
+        }, edges)
+      );
+    },
+    [nodes, edges]
+  );
+
   function getCoordinates(event: any) {
     const bounds = reactFlowRef.current.getBoundingClientRect();
     return reactFlowInstance.project({
@@ -107,6 +131,7 @@ export function Canvas() {
         nodes={nodes}
         edges={edges}
         onNodesChange={onNodesChange}
+        onNodesDelete={onNodesDelete}
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
         connectionMode={ConnectionMode.Loose}
