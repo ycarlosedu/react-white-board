@@ -1,4 +1,5 @@
 import { Trash } from "phosphor-react";
+import { useState } from "react";
 import { Edge, EdgeLabelRenderer, EdgeProps, getSimpleBezierPath, getSmoothStepPath, getStraightPath, useReactFlow } from "reactflow";
 
 const backgroundColors = {
@@ -15,7 +16,6 @@ const fontColors = {
   red: "#ff0000",
   blue: "#008cff",
   black: "#000",
-  white: "#FFF",
 }
 
 type FontColors = keyof typeof fontColors;
@@ -51,14 +51,31 @@ export function DefaultEdge({
     targetPosition,
   });
 
-  const { deleteElements, getEdge } = useReactFlow()
+  const [labelValue, setLabelValue] = useState(data?.label)
+  const { deleteElements, getEdge, setEdges } = useReactFlow()
   const edge = getEdge(id)
   const foreignObjectSize = 400;
 
-  const onEdgeClick = (evt: any, id: string) => {
-    evt.stopPropagation();
+  const onEdgeClick = (event: any, id: string) => {
+    event.stopPropagation();
     deleteElements({edges: [edge!]})
   };
+
+  const handleOnChange = (event: any) => {
+    event.stopPropagation();
+    setLabelValue(event.target.value)
+  }
+
+  const handleOnBlur = () => {
+    deleteElements({edges: [edge!]})
+    edge && setEdges(prevEdges => [...prevEdges, {
+      ...edge,
+      data: {
+        ...edge.data,
+        label: labelValue
+      }
+    }])
+  }
 
   return (
     <>
@@ -73,12 +90,20 @@ export function DefaultEdge({
         <div
           style={{
             transform: `translate(-50%, -50%) translate(${labelX}px,${labelY}px)`,
-            background: backgroundColors[data?.labelColor as BackgroundColors] as string || backgroundColors.transparent,
-            color: fontColors[data?.fontColor as FontColors] as string || fontColors.white,
+            background: 'transparent',
+            border: '2px solid ' + backgroundColors[data?.labelColor as BackgroundColors] as string || backgroundColors.blue,
+            color: fontColors[data?.fontColor as FontColors] as string || fontColors.black,
           }}
           className="nodrag nopan pointer-events-auto p-3 rounded font-bold text-xs absolute"
         >
-          <input type="text" value={data?.label} className="nopan pointer-events-auto bg-transparent outline-none text-center" />
+          <input 
+            maxLength={20} 
+            onChange={handleOnChange}  
+            onBlur={handleOnBlur} 
+            type="text" 
+            value={labelValue} 
+            className="nopan pointer-events-auto bg-transparent outline-none text-center" 
+          />
 
           {selected && (
             <foreignObject
