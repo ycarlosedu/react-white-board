@@ -16,6 +16,7 @@ import ReactFlow, {
   getIncomers,
   getOutgoers,
   getConnectedEdges,
+  MiniMap,
 } from 'reactflow';
 
 import 'reactflow/dist/style.css';
@@ -23,8 +24,6 @@ import '@reactflow/node-resizer/dist/style.css';
 import { Square } from './Nodes/Square';
 import { Circle } from './Nodes/Circle';
 import { DefaultEdge } from './Edges/DefaultEdge';
-import { SmoothEdge } from './Edges/SmoothEdge';
-import { StraightEdge } from './Edges/StraightEdge';
 import NodeInMouse from './NodeInMouse';
 
 export type NodesTypes = keyof typeof NODE_TYPES
@@ -37,13 +36,17 @@ const initialNodes: InitialNode[] = [
   { 
     id: '1', 
     position: { x: 200, y: 400 }, 
-    data: {},
+    data: {
+      label: 'teste'
+    },
     type: 'square',
   },
   { 
     id: '2', 
     position: { x: 600, y: 400 }, 
-    data: {},
+    data: {
+      label: 'teste 2'
+    },
     type: 'square',
   },
 ];
@@ -55,6 +58,29 @@ const initialEdges: Edge[] = [
   //   target: '2', 
   //   label: 'connect to' 
   // }
+  {
+    id: 'edge-1-2',
+    source: '1',
+    target: '2',
+    data: {
+      label: 'Hi!',
+      labelColor: 'blue',
+      fontColor: 'red',
+      edgeType: 'straight',
+    }
+  },
+  {
+    id: 'edge-1-2-default',
+    source: '1',
+    target: '2',
+    animated: true,
+    data: {
+      label: 'animated styled edge',
+      labelColor: 'red',
+      fontColor: 'white',
+    },
+    style: { stroke: 'red' },
+  },
 ];
 
 const NODE_TYPES = {
@@ -64,8 +90,6 @@ const NODE_TYPES = {
 
 const EDGE_TYPES = {
   default: DefaultEdge,
-  smooth: SmoothEdge,
-  straight: StraightEdge,
 }
 
 export function Canvas() {
@@ -117,7 +141,9 @@ export function Canvas() {
       return [...nodes, {
         id: crypto.randomUUID(),
         position: getCoordinates(event),
-        data: {},
+        data: {
+          label: ''
+        },
         type: nodeTypeSelected,
       }]
     })
@@ -149,11 +175,14 @@ export function Canvas() {
         onConnect={onConnect}
         connectionMode={ConnectionMode.Loose}
         defaultEdgeOptions={{
-          type: 'smooth'
+          type: 'default'
         }}
         onPaneClick={handleAddNode}
         onMouseMove={handleMouseMove}
+        snapToGrid={true}
+        fitView
       >
+        <MiniMap />
         <Controls /> 
         <Background gap={12} size={2} color={zinc['200']} />
       </ReactFlow>
