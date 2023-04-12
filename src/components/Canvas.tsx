@@ -69,18 +69,18 @@ const initialEdges: Edge[] = [
       edgeType: 'straight',
     }
   },
-  {
-    id: 'edge-1-2-default',
-    source: '1',
-    target: '2',
-    animated: true,
-    data: {
-      label: 'animated styled edge',
-      labelColor: 'red',
-      fontColor: 'white',
-    },
-    style: { stroke: 'red' },
-  },
+  // {
+  //   id: 'edge-1-2-default',
+  //   source: '1',
+  //   target: '2',
+  //   animated: true,
+  //   data: {
+  //     label: 'animated styled edge',
+  //     labelColor: 'red',
+  //     fontColor: 'white',
+  //   },
+  //   style: { stroke: 'red' },
+  // },
 ];
 
 const NODE_TYPES = {
@@ -102,7 +102,16 @@ export function Canvas() {
   const reactFlowInstance = useReactFlow()
 
   const onConnect = useCallback((params: Connection) => {
-    return setEdges((eds) => addEdge(params, eds))
+    return setEdges((eds) => addEdge({
+      ...params,
+      id: crypto.randomUUID(),
+      data: {
+        label: 'Hi!',
+        labelColor: 'blue',
+        fontColor: 'red',
+        edgeType: 'straight',
+      }
+    }, eds))
   }, [setEdges]);
 
   const onNodesDelete = useCallback(

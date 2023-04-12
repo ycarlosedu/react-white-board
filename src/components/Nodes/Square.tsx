@@ -1,8 +1,9 @@
 import {useRef, useState} from 'react'
-import { Handle, Node, NodeProps, Position, useNodeId, useReactFlow, useStore } from 'reactflow';
+import { Handle, Node, NodeProps, NodeToolbar, Position, useNodeId, useReactFlow, useStore } from 'reactflow';
 import { NodeResizer, NodeResizeControl } from '@reactflow/node-resizer';
 import { Handlers } from './Handlers';
 import useAutosizeTextArea from '../../hooks/useAutosizeTextArea';
+import { Trash, Copy } from '@phosphor-icons/react';
 
 type Props = Partial<NodeProps> & {
   resizer?: boolean;
@@ -13,7 +14,7 @@ type Props = Partial<NodeProps> & {
 
 export function Square({ id, selected, resizer = true, handlers = true, defaultWidth = 200, style, data }: Props) {
   const [labelValue, setLabelValue] = useState(data?.label)
-  const { getNode, setNodes } = useReactFlow()
+  const { getNode, setNodes, deleteElements } = useReactFlow()
   const node = getNode(id!)
   const handleOnBlur = () => {
     node && setNodes(prevNodes => [...prevNodes, {
@@ -29,10 +30,24 @@ export function Square({ id, selected, resizer = true, handlers = true, defaultW
     setLabelValue(event.target.value)
   }
 
+  const handleDeleteNode = () => {
+    deleteElements({nodes: [node!]})
+  }
+
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
   useAutosizeTextArea(textAreaRef.current, labelValue);
 
   return (
+    <>
+    <NodeToolbar isVisible={selected} className='flex gap-2'>
+      <button onClick={handleDeleteNode} className='bg-white p-2 border border-zinc-500 rounded-full hover:bg-zinc-100'>
+        <Trash size={24}/>
+      </button>
+      <button className='bg-white p-2 border border-zinc-500 rounded-full hover:bg-zinc-100'>
+        <Copy size={24} />
+      </button>
+    </NodeToolbar>
+
     <div style={style} className={`bg-violet-500 rounded group p-4 box-border min-w-[${defaultWidth}px] min-h-[${defaultWidth}px] ${resizer ? 'w-full h-full' : ''}`}>
       <textarea 
         ref={textAreaRef}
@@ -57,5 +72,6 @@ export function Square({ id, selected, resizer = true, handlers = true, defaultW
         <Handlers />
       )}
     </div>
+    </>
   )
 }

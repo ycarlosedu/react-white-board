@@ -1,6 +1,6 @@
 import { Trash } from "phosphor-react";
 import { useState } from "react";
-import { Edge, EdgeLabelRenderer, EdgeProps, getSimpleBezierPath, getSmoothStepPath, getStraightPath, useReactFlow } from "reactflow";
+import { Edge, EdgeLabelRenderer, EdgeProps, NodeToolbar, addEdge, getSimpleBezierPath, getSmoothStepPath, getStraightPath, useReactFlow } from "reactflow";
 
 const backgroundColors = {
   yellow: "#ffcc00",
@@ -68,13 +68,16 @@ export function DefaultEdge({
 
   const handleOnBlur = () => {
     deleteElements({edges: [edge!]})
-    edge && setEdges(prevEdges => [...prevEdges, {
+    edge && setEdges((prevEdges) => addEdge({
       ...edge,
+      id: crypto.randomUUID(),
       data: {
-        ...edge.data,
-        label: labelValue
+        label: 'Hi!',
+        labelColor: 'blue',
+        fontColor: 'red',
+        edgeType: 'straight',
       }
-    }])
+    }, prevEdges))
   }
 
   return (
@@ -90,11 +93,10 @@ export function DefaultEdge({
         <div
           style={{
             transform: `translate(-50%, -50%) translate(${labelX}px,${labelY}px)`,
-            background: 'transparent',
             border: '2px solid ' + backgroundColors[data?.labelColor as BackgroundColors] as string || backgroundColors.blue,
             color: fontColors[data?.fontColor as FontColors] as string || fontColors.black,
           }}
-          className="nodrag nopan pointer-events-auto p-3 rounded font-bold text-xs absolute"
+          className="nodrag nopan pointer-events-auto p-1 min-w-0 rounded font-bold text-xs absolute"
         >
           <input 
             maxLength={20} 
@@ -102,7 +104,7 @@ export function DefaultEdge({
             onBlur={handleOnBlur} 
             type="text" 
             value={labelValue} 
-            className="nopan pointer-events-auto bg-transparent outline-none text-center" 
+            className="nopan pointer-events-auto w-full min-w-0 bg-transparent outline-none text-center" 
           />
 
           {selected && (
@@ -125,7 +127,7 @@ export function DefaultEdge({
                 </button>
               </div>
             </foreignObject>
-          )}
+          )} 
         </div>
       </EdgeLabelRenderer>
     </>
