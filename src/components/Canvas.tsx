@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useRef, useState, useEffect } from 'react';
 import * as Toolbar from '@radix-ui/react-toolbar';
 import { zinc } from 'tailwindcss/colors'
 
@@ -28,6 +28,7 @@ import { DefaultNode } from './Nodes/DefaultNode';
 import { DefaultEdge } from './Edges/DefaultEdge';
 import NodeInMouse from './NodeInMouse';
 import useSelectNode from '../hooks/useSelectNode';
+import { LOCAL_STORAGE, getItems, saveItems } from '../utils/localStorage';
 
 export type NodesTypes = keyof typeof NODE_TYPES | undefined
 
@@ -96,9 +97,17 @@ const EDGE_TYPES = {
 export const getElementSelected = (state: any) => state.elementSelected;
 
 export function Canvas() {
-  const [nodes, setNodes, onNodesChange] = useNodesState([]);
-  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+  const [nodes, setNodes, onNodesChange] = useNodesState(getItems(LOCAL_STORAGE.NODES));
+  const [edges, setEdges, onEdgesChange] = useEdgesState(getItems(LOCAL_STORAGE.EDGES));
   const [mousePosition, setMousePosition] = useState<{ top: number; left: number; }>();
+
+  useEffect(() => {
+    saveItems(LOCAL_STORAGE.NODES, nodes)
+  }, [nodes])
+
+  useEffect(() => {
+    saveItems(LOCAL_STORAGE.EDGES, edges)
+  }, [edges])
 
   const elementSelected = useStore(getElementSelected);
   const storeApi = useStoreApi()

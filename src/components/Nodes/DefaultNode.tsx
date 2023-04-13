@@ -7,6 +7,9 @@ import { Trash, Copy } from '@phosphor-icons/react';
 import Tooltip from '../Tooltip';
 import useSelectNode from '../../hooks/useSelectNode';
 import { NodesTypes } from '../Canvas';
+import Dropdown from '../Dropdown';
+import { At, GridFour, PaintBucket } from 'phosphor-react';
+import { FontColors, LabelColors, fontColors, labelColors } from '../Edges/DefaultEdge';
 
 type Props = Partial<NodeProps> & {
   resizer?: boolean;
@@ -16,12 +19,18 @@ type Props = Partial<NodeProps> & {
 }
 
 const NODES_CLASSNAMES = {
-  square: 'rounded bg-violet-500 p-4',
-  circle: 'rounded-full bg-blue-500 p-20',
+  square: 'rounded p-4',
+  circle: 'rounded-full p-20',
 }
 
 export function DefaultNode({ id, selected, resizer = true, handlers = true, defaultWidth = 200, style, data, type }: Props) {
+  const labelColor = labelColors[data?.labelColor as LabelColors] as string || labelColors.blue
+  const fontColor = fontColors[data?.fontColor as FontColors] as string || fontColors.black
+
   const [labelValue, setLabelValue] = useState(data?.label)
+  const [nodeType, setNodeType] = useState(type)
+  const [labelColorValue, setLabelColorValue] = useState(labelColor)
+  const [fontColorValue, setFontColorValue] = useState(fontColor)
 
   const { getNode, setNodes, deleteElements } = useReactFlow()
   const node = getNode(id!)
@@ -29,9 +38,11 @@ export function DefaultNode({ id, selected, resizer = true, handlers = true, def
 
   const nodeStyle = NODES_CLASSNAMES[type as NodesTypes || 'square']
 
-  const handleOnBlur = () => {
+  const handleUpdateNode = () => {
+    deleteElements({nodes: [node!]})
     node && setNodes(prevNodes => [...prevNodes, {
       ...node,
+      type: nodeType,
       data: {
         ...node.data,
         label: labelValue
@@ -47,8 +58,38 @@ export function DefaultNode({ id, selected, resizer = true, handlers = true, def
     deleteElements({nodes: [node!]})
   }
 
+  const handleChangeNodeType = (newType: NodesTypes) => {
+    setNodeType(newType)
+    handleUpdateNode()
+  }
+
+  const handleChangeFontColor = (event: any) => {
+    event.stopPropagation();
+    setFontColorValue(event.target.value)
+    handleUpdateNode()
+  }
+
+  const handleChangeLabelColor = (event: any) => {
+    event.stopPropagation();
+    setLabelColorValue(event.target.value)
+    handleUpdateNode()
+  }
+
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
   const minHeight = useAutosizeTextArea(textAreaRef.current, labelValue, defaultWidth);
+
+  const itemsNodeType = [
+    {
+      text: 'Square',
+      onClick: () => handleChangeNodeType('square'),
+      checked: type === 'square'
+    },
+    {
+      text: 'Circle',
+      onClick: () => handleChangeNodeType('circle'),
+      checked: type === 'circle'
+    }
+  ]
 
   return (
     <>
@@ -58,18 +99,53 @@ export function DefaultNode({ id, selected, resizer = true, handlers = true, def
           <Trash size={24}/>
         </button>
       </Tooltip>
+
       <Tooltip text="Copy Node">
         <button onClick={() => useSelectNode(node!, storeApi)} className='bg-white p-2 border border-zinc-500 rounded-full hover:bg-zinc-100'>
           <Copy size={24} />
         </button>
       </Tooltip>
+
+      <Dropdown tooltip="Change Node Type" items={itemsNodeType}>
+        <button 
+          className='bg-white p-2 border border-zinc-500 rounded-full hover:bg-zinc-100'
+          aria-label="Change Node Type">
+          <GridFour size={24} />
+        </button>
+      </Dropdown>
+
+      <Tooltip text="Change Label Color">
+        <div
+          className="bg-white p-2 border w-16 border-zinc-500 rounded-full flex items-center justify-center gap-1 hover:bg-zinc-100"
+        >
+          <PaintBucket size={16} color={labelColorValue} />
+          <input
+            value={labelColorValue}
+            onChange={handleChangeLabelColor}
+            type="color" className="w-1/2 h-full bg-transparent" 
+          />
+        </div>
+      </Tooltip>
+
+      <Tooltip text="Change Font Color">
+        <div
+          className="bg-white p-2 border w-16 border-zinc-500 rounded-full flex items-center justify-center gap-1 hover:bg-zinc-100"
+        >
+          <At size={16} color={fontColorValue} />
+          <input
+            value={fontColorValue}
+            onChange={handleChangeFontColor}
+            type="color" className="w-1/2 h-full bg-transparent" 
+          />
+        </div>
+      </Tooltip>
     </NodeToolbar>
 
-    <div style={{...style, minHeight}} className={`${nodeStyle} group box-border min-w-[${defaultWidth}px] ${resizer ? 'w-full h-full' : ''}`}>
+    <div style={{...style, minHeight, color: fontColorValue, backgroundColor: labelColorValue}} className={`${nodeStyle} group box-border min-w-[${defaultWidth}px] ${resizer ? 'w-full h-full' : ''}`}>
       <textarea 
         ref={textAreaRef}
         rows={1}
-        onBlur={handleOnBlur} 
+        onBlur={handleUpdateNode} 
         onChange={handleOnChange} 
         value={labelValue} 
         className="bg-transparent outline-none resize-none w-full" 

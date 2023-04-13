@@ -4,23 +4,23 @@ import { EdgeLabelRenderer, EdgeProps, addEdge, getSimpleBezierPath, getSmoothSt
 import Tooltip from "../Tooltip";
 import Dropdown from "../Dropdown";
 
-const labelColors = {
+export const labelColors = {
   yellow: "#ffcc00",
   red: "#ff0000",
   blue: "#008cff",
   transparent: "rgba(0, 0, 0, 0)",
 }
 
-type LabelColors = keyof typeof labelColors;
+export type LabelColors = keyof typeof labelColors;
 
-const fontColors = {
+export const fontColors = {
   yellow: "#ffcc00",
   red: "#ff0000",
   blue: "#008cff",
   black: "#000",
 }
 
-type FontColors = keyof typeof fontColors;
+export type FontColors = keyof typeof fontColors;
 
 const getEdgeType = {
   default: getSmoothStepPath,
@@ -149,6 +149,11 @@ export function DefaultEdge({
 
   const itemsBorderStyle = [
     {
+      text: 'None',
+      onClick: () => handleChangeBorder('none'),
+      checked: borderStyleValue === 'none'
+    },
+    {
       text: 'Dotted',
       onClick: () => handleChangeBorder('dotted'),
       checked: borderStyleValue === 'dotted'
@@ -162,11 +167,6 @@ export function DefaultEdge({
       text: 'Solid',
       onClick: () => handleChangeBorder('solid'),
       checked: borderStyleValue === 'solid'
-    },
-    {
-      text: 'None',
-      onClick: () => handleChangeBorder('none'),
-      checked: borderStyleValue === 'none'
     }
   ]
   
@@ -230,7 +230,7 @@ export function DefaultEdge({
                 <div
                   className="nopan pointer-events-auto px-1 border-zinc-300 w-12 h-full flex gap-1 items-center justify-center text-xs text-black transition-all hover:bg-zinc-200"
                 >
-                  <PaintBucket size={16} color={labelColor} />
+                  <PaintBucket size={16} color={labelColorValue} />
                   <input
                     value={labelColorValue}
                     onChange={handleOnChangeBgValue}
@@ -243,7 +243,7 @@ export function DefaultEdge({
                 <div
                   className="nopan pointer-events-auto px-1 border-zinc-300 w-12 h-full flex gap-1 items-center justify-center text-xs text-black transition-all hover:bg-zinc-200"
                 >
-                  <At size={16} color={fontColor} />
+                  <At size={16} color={fontColorValue} />
                   <input
                     value={fontColorValue}
                     onChange={handleOnChangeFontValue}
