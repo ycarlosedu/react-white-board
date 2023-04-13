@@ -69,18 +69,18 @@ const initialEdges: Edge[] = [
       edgeType: 'straight',
     }
   },
-  // {
-  //   id: 'edge-1-2-default',
-  //   source: '1',
-  //   target: '2',
-  //   animated: true,
-  //   data: {
-  //     label: 'animated styled edge',
-  //     labelColor: 'red',
-  //     fontColor: 'white',
-  //   },
-  //   style: { stroke: 'red' },
-  // },
+  {
+    id: 'edge-1-2-default',
+    source: '1',
+    target: '2',
+    animated: true,
+    data: {
+      label: 'animated styled edge',
+      labelColor: 'red',
+      fontColor: 'white',
+    },
+    style: { stroke: 'red' },
+  },
 ];
 
 const NODE_TYPES = {

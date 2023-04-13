@@ -1,17 +1,17 @@
 import { useState } from "react";
-import { Trash, PaintBucket, BezierCurve, At } from "phosphor-react";
+import { Trash, PaintBucket, BezierCurve, At, GridFour } from "phosphor-react";
 import { EdgeLabelRenderer, EdgeProps, addEdge, getSimpleBezierPath, getSmoothStepPath, getStraightPath, useReactFlow } from "reactflow";
 import Tooltip from "../Tooltip";
 import Dropdown from "../Dropdown";
 
-const backgroundColors = {
+const labelColors = {
   yellow: "#ffcc00",
   red: "#ff0000",
   blue: "#008cff",
   transparent: "rgba(0, 0, 0, 0)",
 }
 
-type BackgroundColors = keyof typeof backgroundColors;
+type LabelColors = keyof typeof labelColors;
 
 const fontColors = {
   yellow: "#ffcc00",
@@ -30,6 +30,8 @@ const getEdgeType = {
 
 type EdgeTypes = keyof typeof getEdgeType;
 
+type BorderTypes = 'solid' | 'dashed' | 'dotted' | 'none';
+
 export function DefaultEdge({
   id,
   sourceX,
@@ -41,7 +43,8 @@ export function DefaultEdge({
   style = {},
   data,
   markerEnd,
-  selected
+  selected,
+  animated = false
 }: EdgeProps) {
   const [edgeTypeValue, setEdgeTypeValue] = useState<EdgeTypes>(data?.edgeType || 'default')
   const getPath = getEdgeType[edgeTypeValue as EdgeTypes];
@@ -55,12 +58,14 @@ export function DefaultEdge({
     targetPosition,
   });
 
-  const backgroundColor = backgroundColors[data?.labelColor as BackgroundColors] as string || backgroundColors.blue
+  const labelColor = labelColors[data?.labelColor as LabelColors] as string || labelColors.blue
   const fontColor = fontColors[data?.fontColor as FontColors] as string || fontColors.black
 
   const [labelValue, setLabelValue] = useState(data?.label)
-  const [labelColorValue, setLabelColorValue] = useState(backgroundColor)
+  const [labelColorValue, setLabelColorValue] = useState(labelColor)
   const [fontColorValue, setFontColorValue] = useState(fontColor)
+  const [isLabelAnimated, setIsLabelAnimated] = useState(animated)
+  const [borderStyleValue, setBorderStyleValue] = useState(data?.borderStyle || 'none')
 
   const { deleteElements, getEdge, setEdges } = useReactFlow()
   const edge = getEdge(id)
@@ -92,11 +97,13 @@ export function DefaultEdge({
     edge && setEdges((prevEdges) => addEdge({
       ...edge,
       id: crypto.randomUUID(),
+      animated: isLabelAnimated,
       data: {
         label: 'Hi!',
         labelColor: labelColorValue,
         fontColor: fontColorValue,
         edgeType: edgeTypeValue,
+        borderStyle: borderStyleValue,
       }
     }, prevEdges))
   }
@@ -106,18 +113,59 @@ export function DefaultEdge({
     handleUpdateEdge()
   }
 
+  const handleAnimateEdge = () => {
+    setIsLabelAnimated(prevState => !prevState)
+    handleUpdateEdge()
+  }
+
+  const handleChangeBorder = (border: BorderTypes) => {
+    setBorderStyleValue(border)
+    handleUpdateEdge()
+  }
+
   const itemsEdgeType = [
     {
       text: 'Default',
-      onClick: () => handleSelectNewShape('default')
+      onClick: () => handleSelectNewShape('default'),
+      checked: edgeTypeValue === 'default'
     },
     {
       text: 'Smooth',
-      onClick: () => handleSelectNewShape('smooth')
+      onClick: () => handleSelectNewShape('smooth'),
+      checked: edgeTypeValue === 'smooth'
     },
     {
       text: 'Straight',
-      onClick: () => handleSelectNewShape('straight')
+      onClick: () => handleSelectNewShape('straight'),
+      checked: edgeTypeValue === 'straight'
+    },
+    {
+      text: 'Animated',
+      onClick: () => handleAnimateEdge(),
+      checked: isLabelAnimated
+    },
+  ]
+
+  const itemsBorderStyle = [
+    {
+      text: 'Dotted',
+      onClick: () => handleChangeBorder('dotted'),
+      checked: borderStyleValue === 'dotted'
+    },
+    {
+      text: 'Dashed',
+      onClick: () => handleChangeBorder('dashed'),
+      checked: borderStyleValue === 'dashed'
+    },
+    {
+      text: 'Solid',
+      onClick: () => handleChangeBorder('solid'),
+      checked: borderStyleValue === 'solid'
+    },
+    {
+      text: 'None',
+      onClick: () => handleChangeBorder('none'),
+      checked: borderStyleValue === 'none'
     }
   ]
   
@@ -134,7 +182,7 @@ export function DefaultEdge({
         <div
           style={{
             transform: `translate(-50%, -50%) translate(${labelX}px,${labelY}px)`,
-            border: '2px solid ' + labelColorValue,
+            border: `2px ${borderStyleValue} ${labelColorValue}`,
             color: fontColorValue,
           }}
           className="nodrag nopan pointer-events-auto p-1 min-w-0 rounded font-bold text-xs absolute"
@@ -169,11 +217,19 @@ export function DefaultEdge({
                 </button>
               </Dropdown>
 
+              <Dropdown tooltip="Change Border Style" items={itemsBorderStyle}>
+                <button 
+                  className="nopan pointer-events-auto px-1 border-zinc-300 w-6 h-full flex gap-1 items-center justify-center text-xs text-black transition-all hover:bg-zinc-200"
+                  aria-label="Change Border Style">
+                  <GridFour size={16} />
+                </button>
+              </Dropdown>
+
               <Tooltip text="Change Border Color">
                 <div
                   className="nopan pointer-events-auto px-1 border-zinc-300 w-12 h-full flex gap-1 items-center justify-center text-xs text-black transition-all hover:bg-zinc-200"
                 >
-                  <PaintBucket size={16} color={backgroundColor} />
+                  <PaintBucket size={16} color={labelColor} />
                   <input
                     value={labelColorValue}
                     onChange={handleOnChangeBgValue}
