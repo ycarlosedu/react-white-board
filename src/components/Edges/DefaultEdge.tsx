@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { Trash, PaintBucket, BezierCurve, At } from "phosphor-react";
 import { EdgeLabelRenderer, EdgeProps, addEdge, getSimpleBezierPath, getSmoothStepPath, getStraightPath, useReactFlow } from "reactflow";
-import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import Tooltip from "../Tooltip";
+import Dropdown from "../Dropdown";
 
 const backgroundColors = {
   yellow: "#ffcc00",
@@ -59,12 +59,11 @@ export function DefaultEdge({
   const fontColor = fontColors[data?.fontColor as FontColors] as string || fontColors.black
 
   const [labelValue, setLabelValue] = useState(data?.label)
-  const [bgColorValue, setBgColorValue] = useState(backgroundColor)
+  const [labelColorValue, setLabelColorValue] = useState(backgroundColor)
   const [fontColorValue, setFontColorValue] = useState(fontColor)
 
   const { deleteElements, getEdge, setEdges } = useReactFlow()
   const edge = getEdge(id)
-  const foreignObjectSize = 400;
 
   const onEdgeDelete = (event: any) => {
     event.stopPropagation();
@@ -78,7 +77,7 @@ export function DefaultEdge({
 
   const handleOnChangeBgValue = (event: any) => {
     event.stopPropagation();
-    setBgColorValue(event.target.value)
+    setLabelColorValue(event.target.value)
     handleUpdateEdge()
   }
 
@@ -95,7 +94,7 @@ export function DefaultEdge({
       id: crypto.randomUUID(),
       data: {
         label: 'Hi!',
-        labelColor: bgColorValue,
+        labelColor: labelColorValue,
         fontColor: fontColorValue,
         edgeType: edgeTypeValue,
       }
@@ -106,6 +105,21 @@ export function DefaultEdge({
     setEdgeTypeValue(shape)
     handleUpdateEdge()
   }
+
+  const itemsEdgeType = [
+    {
+      text: 'Default',
+      onClick: () => handleSelectNewShape('default')
+    },
+    {
+      text: 'Smooth',
+      onClick: () => handleSelectNewShape('smooth')
+    },
+    {
+      text: 'Straight',
+      onClick: () => handleSelectNewShape('straight')
+    }
+  ]
   
   return (
     <>
@@ -120,7 +134,7 @@ export function DefaultEdge({
         <div
           style={{
             transform: `translate(-50%, -50%) translate(${labelX}px,${labelY}px)`,
-            border: '2px solid ' + bgColorValue,
+            border: '2px solid ' + labelColorValue,
             color: fontColorValue,
           }}
           className="nodrag nopan pointer-events-auto p-1 min-w-0 rounded font-bold text-xs absolute"
@@ -147,37 +161,13 @@ export function DefaultEdge({
                 </button>
               </Tooltip>
 
-              <DropdownMenu.Root>
-                <Tooltip text="Change Edge Type">
-                  <DropdownMenu.Trigger asChild>
-                    <button 
-                      className="nopan pointer-events-auto px-1 border-zinc-300 w-6 h-full flex gap-1 items-center justify-center text-xs text-black transition-all hover:bg-zinc-200"
-                      aria-label="Change Edge Type">
-                      <BezierCurve size={16} />
-                    </button>
-                  </DropdownMenu.Trigger>
-                </Tooltip>
-
-                <DropdownMenu.Portal>
-                  <DropdownMenu.Content data-side='top' className="bg-white min-w-[100px] rounded p-1" sideOffset={5}>
-                    <DropdownMenu.Item className="hover:bg-zinc-200 p-2 rounded">
-                      <button onClick={() => handleSelectNewShape('smooth')}>
-                        Smooth
-                      </button>
-                    </DropdownMenu.Item>
-                    <DropdownMenu.Item className="hover:bg-zinc-200 p-2 rounded">
-                      <button onClick={() => handleSelectNewShape('straight')}>
-                        Straight
-                      </button>
-                    </DropdownMenu.Item>
-                    <DropdownMenu.Item className="hover:bg-zinc-200 p-2 rounded">
-                      <button onClick={() => handleSelectNewShape('default')}>
-                        Default
-                      </button>
-                    </DropdownMenu.Item>
-                  </DropdownMenu.Content>
-                </DropdownMenu.Portal>
-              </DropdownMenu.Root>
+              <Dropdown tooltip="Change Edge Type" items={itemsEdgeType}>
+                <button 
+                  className="nopan pointer-events-auto px-1 border-zinc-300 w-6 h-full flex gap-1 items-center justify-center text-xs text-black transition-all hover:bg-zinc-200"
+                  aria-label="Change Edge Type">
+                  <BezierCurve size={16} />
+                </button>
+              </Dropdown>
 
               <Tooltip text="Change Border Color">
                 <div
@@ -185,7 +175,7 @@ export function DefaultEdge({
                 >
                   <PaintBucket size={16} color={backgroundColor} />
                   <input
-                    value={bgColorValue}
+                    value={labelColorValue}
                     onChange={handleOnChangeBgValue}
                     type="color" className="nopan pointer-events-auto w-1/2 h-full bg-transparent" 
                   />
