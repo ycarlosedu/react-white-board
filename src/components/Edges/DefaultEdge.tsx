@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { Trash, PaintBucket, BezierCurve, At } from "phosphor-react";
-import { Edge, EdgeLabelRenderer, EdgeProps, NodeToolbar, addEdge, getSimpleBezierPath, getSmoothStepPath, getStraightPath, useReactFlow } from "reactflow";
+import { EdgeLabelRenderer, EdgeProps, addEdge, getSimpleBezierPath, getSmoothStepPath, getStraightPath, useReactFlow } from "reactflow";
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
+import Tooltip from "../Tooltip";
 
 const backgroundColors = {
   yellow: "#ffcc00",
@@ -137,21 +138,25 @@ export function DefaultEdge({
             <div
               className="bg-white rounded-2xl shadow-lg border border-zinc-300 px-2 left-1/2 -translate-x-1/2 h-6 flex items-center justify-center absolute -top-10"
             >
-              <button
-                className="nopan pointer-events-auto px-1 border-zinc-300 w-6 h-full flex gap-1 items-center justify-center text-xs text-black transition-all hover:bg-zinc-200"
-                onClick={onEdgeDelete}
-              >
-                <Trash size={16} color="#cb1818" />
-              </button>
+              <Tooltip text="Delete Edge">
+                <button
+                  className="nopan pointer-events-auto px-1 border-zinc-300 w-6 h-full flex gap-1 items-center justify-center text-xs text-black transition-all hover:bg-zinc-200"
+                  onClick={onEdgeDelete}
+                >
+                  <Trash size={16} color="#cb1818" />
+                </button>
+              </Tooltip>
 
               <DropdownMenu.Root>
-                <DropdownMenu.Trigger asChild>
-                  <button 
-                    className="nopan pointer-events-auto px-1 border-zinc-300 w-6 h-full flex gap-1 items-center justify-center text-xs text-black transition-all hover:bg-zinc-200"
-                    aria-label="Change Edge Type">
-                    <BezierCurve size={16} />
-                  </button>
-                </DropdownMenu.Trigger>
+                <Tooltip text="Change Edge Type">
+                  <DropdownMenu.Trigger asChild>
+                    <button 
+                      className="nopan pointer-events-auto px-1 border-zinc-300 w-6 h-full flex gap-1 items-center justify-center text-xs text-black transition-all hover:bg-zinc-200"
+                      aria-label="Change Edge Type">
+                      <BezierCurve size={16} />
+                    </button>
+                  </DropdownMenu.Trigger>
+                </Tooltip>
 
                 <DropdownMenu.Portal>
                   <DropdownMenu.Content data-side='top' className="bg-white min-w-[100px] rounded p-1" sideOffset={5}>
@@ -174,27 +179,32 @@ export function DefaultEdge({
                 </DropdownMenu.Portal>
               </DropdownMenu.Root>
 
-              <div
-                className="nopan pointer-events-auto px-1 border-zinc-300 w-12 h-full flex gap-1 items-center justify-center text-xs text-black transition-all hover:bg-zinc-200"
-              >
-                <PaintBucket size={16} color={backgroundColor} />
-                <input
-                  value={bgColorValue}
-                  onChange={handleOnChangeBgValue}
-                  type="color" className="nopan pointer-events-auto w-1/2 h-full bg-transparent" 
-                />
-              </div>
+              <Tooltip text="Change Border Color">
+                <div
+                  className="nopan pointer-events-auto px-1 border-zinc-300 w-12 h-full flex gap-1 items-center justify-center text-xs text-black transition-all hover:bg-zinc-200"
+                >
+                  <PaintBucket size={16} color={backgroundColor} />
+                  <input
+                    value={bgColorValue}
+                    onChange={handleOnChangeBgValue}
+                    type="color" className="nopan pointer-events-auto w-1/2 h-full bg-transparent" 
+                  />
+                </div>
+              </Tooltip>
 
-              <button
-                className="nopan pointer-events-auto px-1 border-zinc-300 w-12 h-full flex gap-1 items-center justify-center text-xs text-black transition-all hover:bg-zinc-200"
-              >
-                <At size={16} color={fontColor} />
-                <input
-                  value={fontColorValue}
-                  onChange={handleOnChangeFontValue}
-                  type="color" className="nopan pointer-events-auto w-1/2 h-full bg-transparent" 
-                />
-              </button>
+              <Tooltip text="Change Font Color">
+                <div
+                  className="nopan pointer-events-auto px-1 border-zinc-300 w-12 h-full flex gap-1 items-center justify-center text-xs text-black transition-all hover:bg-zinc-200"
+                >
+                  <At size={16} color={fontColor} />
+                  <input
+                    value={fontColorValue}
+                    onChange={handleOnChangeFontValue}
+                    type="color" className="nopan pointer-events-auto w-1/2 h-full bg-transparent" 
+                  />
+                </div>
+              </Tooltip>
+
             </div>
           )} 
 

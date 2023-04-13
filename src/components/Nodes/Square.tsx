@@ -4,6 +4,7 @@ import { NodeResizer, NodeResizeControl } from '@reactflow/node-resizer';
 import { Handlers } from './Handlers';
 import useAutosizeTextArea from '../../hooks/useAutosizeTextArea';
 import { Trash, Copy } from '@phosphor-icons/react';
+import Tooltip from '../Tooltip';
 
 type Props = Partial<NodeProps> & {
   resizer?: boolean;
@@ -40,12 +41,16 @@ export function Square({ id, selected, resizer = true, handlers = true, defaultW
   return (
     <>
     <NodeToolbar isVisible={selected} className='flex gap-2'>
-      <button onClick={handleDeleteNode} className='bg-white p-2 border border-zinc-500 rounded-full hover:bg-zinc-100'>
-        <Trash size={24}/>
-      </button>
-      <button className='bg-white p-2 border border-zinc-500 rounded-full hover:bg-zinc-100'>
-        <Copy size={24} />
-      </button>
+      <Tooltip text="Delete Node">
+        <button onClick={handleDeleteNode} className='bg-white p-2 border border-zinc-500 rounded-full hover:bg-zinc-100'>
+          <Trash size={24}/>
+        </button>
+      </Tooltip>
+      <Tooltip text="Copy Node">
+        <button className='bg-white p-2 border border-zinc-500 rounded-full hover:bg-zinc-100'>
+          <Copy size={24} />
+        </button>
+      </Tooltip>
     </NodeToolbar>
 
     <div style={style} className={`bg-violet-500 rounded group p-4 box-border min-w-[${defaultWidth}px] min-h-[${defaultWidth}px] ${resizer ? 'w-full h-full' : ''}`}>
