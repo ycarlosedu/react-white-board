@@ -10,13 +10,13 @@ type Props = {
   element?: Node & { type: NodesTypes },
 }
 
-const NODES = {
-  square: DefaultNode,
-  circle: DefaultNode,
-}
-
 export default function NodeInMouse({ position = { top: 0, left: 0 }, element }: Props) {
   if (!element?.type) return null
+
+  const NODES = {
+    square: (props: any) => DefaultNode({...element, ...props}),
+    circle: (props: any) => DefaultNode({...element, ...props}),
+  }
 
   const LazyNode = NODES[element?.type || "square"];
   

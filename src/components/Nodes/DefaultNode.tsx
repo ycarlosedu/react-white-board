@@ -16,8 +16,8 @@ type Props = Partial<NodeProps> & {
 }
 
 const NODES_CLASSNAMES = {
-  square: 'rounded bg-violet-500',
-  circle: 'rounded-full bg-blue-500',
+  square: 'rounded bg-violet-500 p-4',
+  circle: 'rounded-full bg-blue-500 p-20',
 }
 
 export function DefaultNode({ id, selected, resizer = true, handlers = true, defaultWidth = 200, style, data, type }: Props) {
@@ -65,7 +65,7 @@ export function DefaultNode({ id, selected, resizer = true, handlers = true, def
       </Tooltip>
     </NodeToolbar>
 
-    <div style={{...style, minHeight}} className={`${nodeStyle} group p-4 box-border min-w-[${defaultWidth}px] ${resizer ? 'w-full h-full' : ''}`}>
+    <div style={{...style, minHeight}} className={`${nodeStyle} group box-border min-w-[${defaultWidth}px] ${resizer ? 'w-full h-full' : ''}`}>
       <textarea 
         ref={textAreaRef}
         rows={1}
