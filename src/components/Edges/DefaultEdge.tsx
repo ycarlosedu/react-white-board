@@ -65,6 +65,7 @@ export function DefaultEdge({
   const [labelColorValue, setLabelColorValue] = useState(labelColor)
   const [fontColorValue, setFontColorValue] = useState(fontColor)
   const [isLabelAnimated, setIsLabelAnimated] = useState(animated)
+  // console.log(animated)
   const [borderStyleValue, setBorderStyleValue] = useState(data?.borderStyle || 'none')
 
   const { deleteElements, getEdge, setEdges } = useReactFlow()
@@ -193,7 +194,7 @@ export function DefaultEdge({
             onBlur={handleUpdateEdge} 
             type="text" 
             value={labelValue} 
-            className="nopan pointer-events-auto w-full min-w-0 bg-transparent outline-none text-center" 
+            className='nopan pointer-events-auto w-full min-w-0 bg-transparent text-center outline-none' 
           />
 
           {selected && (

@@ -1,10 +1,12 @@
 import {useRef, useState} from 'react'
-import { Handle, Node, NodeProps, NodeToolbar, Position, useNodeId, useReactFlow, useStore } from 'reactflow';
-import { NodeResizer, NodeResizeControl } from '@reactflow/node-resizer';
+import { NodeProps, NodeToolbar, useReactFlow, useStore, useStoreApi } from 'reactflow';
+import { NodeResizer } from '@reactflow/node-resizer';
 import { Handlers } from './Handlers';
 import useAutosizeTextArea from '../../hooks/useAutosizeTextArea';
 import { Trash, Copy } from '@phosphor-icons/react';
 import Tooltip from '../Tooltip';
+import useSelectNode from '../../hooks/useSelectNode';
+import { NodesTypes } from '../Canvas';
 
 type Props = Partial<NodeProps> & {
   resizer?: boolean;
@@ -13,10 +15,20 @@ type Props = Partial<NodeProps> & {
   style?: React.CSSProperties;
 }
 
-export function Square({ id, selected, resizer = true, handlers = true, defaultWidth = 200, style, data }: Props) {
+const NODES_CLASSNAMES = {
+  square: 'rounded bg-violet-500',
+  circle: 'rounded-full bg-blue-500',
+}
+
+export function DefaultNode({ id, selected, resizer = true, handlers = true, defaultWidth = 200, style, data, type }: Props) {
   const [labelValue, setLabelValue] = useState(data?.label)
+
   const { getNode, setNodes, deleteElements } = useReactFlow()
   const node = getNode(id!)
+  const storeApi = useStoreApi()
+
+  const nodeStyle = NODES_CLASSNAMES[type as NodesTypes || 'square']
+
   const handleOnBlur = () => {
     node && setNodes(prevNodes => [...prevNodes, {
       ...node,
@@ -36,7 +48,7 @@ export function Square({ id, selected, resizer = true, handlers = true, defaultW
   }
 
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
-  useAutosizeTextArea(textAreaRef.current, labelValue);
+  const minHeight = useAutosizeTextArea(textAreaRef.current, labelValue, defaultWidth);
 
   return (
     <>
@@ -47,28 +59,28 @@ export function Square({ id, selected, resizer = true, handlers = true, defaultW
         </button>
       </Tooltip>
       <Tooltip text="Copy Node">
-        <button className='bg-white p-2 border border-zinc-500 rounded-full hover:bg-zinc-100'>
+        <button onClick={() => useSelectNode(node!, storeApi)} className='bg-white p-2 border border-zinc-500 rounded-full hover:bg-zinc-100'>
           <Copy size={24} />
         </button>
       </Tooltip>
     </NodeToolbar>
 
-    <div style={style} className={`bg-violet-500 rounded group p-4 box-border min-w-[${defaultWidth}px] min-h-[${defaultWidth}px] ${resizer ? 'w-full h-full' : ''}`}>
+    <div style={{...style, minHeight}} className={`${nodeStyle} group p-4 box-border min-w-[${defaultWidth}px] ${resizer ? 'w-full h-full' : ''}`}>
       <textarea 
         ref={textAreaRef}
         rows={1}
         onBlur={handleOnBlur} 
         onChange={handleOnChange} 
         value={labelValue} 
-        className="bg-transparent outline-none resize-none" 
+        className="bg-transparent outline-none resize-none w-full" 
       />
       
       {resizer && (
         <NodeResizer 
           minWidth={defaultWidth} 
-          minHeight={defaultWidth} 
+          minHeight={minHeight} 
           isVisible={selected} 
-          lineClassName="border-blue-400"
+          lineClassName="border-blue-400 border-2"
           handleClassName="h-3 w-3 bg-white border-2 rounded border-blue-400"
         />
       )}

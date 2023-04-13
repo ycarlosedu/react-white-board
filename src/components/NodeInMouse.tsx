@@ -1,24 +1,24 @@
+import { Node } from "reactflow";
 import { NodesTypes } from "./Canvas"
-import { Circle } from "./Nodes/Circle";
-import { Square } from "./Nodes/Square";
+import { DefaultNode } from "./Nodes/DefaultNode";
 
 type Props = {
   position?: {
     top: number,
     left: number,
   },
-  element?: NodesTypes,
+  element?: Node & { type: NodesTypes },
 }
 
 const NODES = {
-  square: Square,
-  circle: Circle,
+  square: DefaultNode,
+  circle: DefaultNode,
 }
 
 export default function NodeInMouse({ position = { top: 0, left: 0 }, element }: Props) {
-  if (!element) return null
+  if (!element?.type) return null
 
-  const LazyNode = NODES[element];
+  const LazyNode = NODES[element?.type || "square"];
   
   return (
     <>
