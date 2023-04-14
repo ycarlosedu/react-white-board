@@ -2,6 +2,7 @@ import { useState } from "react";
 import * as ContextMenu from '@radix-ui/react-context-menu';
 import { Check } from "phosphor-react";
 import { Dot } from "@phosphor-icons/react";
+import ConfirmationDialog from "../ConfirmationDialog";
 
 type Props = {
   children: React.ReactNode
@@ -17,10 +18,18 @@ export default function CustomContextMenu({ children, onDeleteAllNodes, onDelete
   const [bookmarksChecked, setBookmarksChecked] = useState(true);
   const [urlsChecked, setUrlsChecked] = useState(false);
   const [person, setPerson] = useState('pedro');
+  const [isModalOpen, setIsModalOpen] = useState(false)
+
+  function handleModal(open: boolean) {
+    setIsModalOpen(open)
+  }
 
   return (
     <ContextMenu.Root>
       <ContextMenu.Trigger onMouseMove={onMouseMove}>{children}</ContextMenu.Trigger>
+
+      <ConfirmationDialog handleClose={handleModal} isOpen={isModalOpen} onConfirm={onDeleteAllNodes} />
+
       <ContextMenu.Portal>
         <ContextMenu.Content className="contextContent">
 
@@ -36,9 +45,10 @@ export default function CustomContextMenu({ children, onDeleteAllNodes, onDelete
 
           <ContextMenu.Separator className="separator" />
 
-          <ContextMenu.Item onClick={onDeleteAllNodes} className="contextItem hover:bg-red-600">
-            Delete all Nodes and Edges
+          <ContextMenu.Item onClick={() => setIsModalOpen(true)} className="contextItem hover:bg-red-600">
+              Delete all Nodes and Edges
           </ContextMenu.Item>
+
           <ContextMenu.Item onClick={onDeleteAllEdges} className="contextItem hover:bg-red-600">
             Delete all Edges
           </ContextMenu.Item>

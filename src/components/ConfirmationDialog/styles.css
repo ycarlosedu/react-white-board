@@ -1,0 +1,102 @@
+.DialogOverlay {
+  @apply
+  bg-zinc-700/40
+  fixed
+  flex
+  items-center
+  justify-center
+  inset-0;
+  animation: overlayShow 150ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.DialogContent {
+  @apply
+  bg-white
+  fixed
+  top-1/2
+  left-1/2
+  p-6
+  max-w-md
+  max-h-[85vh]
+  rounded;
+  box-shadow: hsl(206 22% 7% / 35%) 0px 10px 38px -10px, hsl(206 22% 7% / 20%) 0px 10px 20px -15px;
+  transform: translate(-50%, -50%);
+  width: 90vw;
+  animation: contentShow 150ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.DialogContent:focus {
+  outline: none;
+}
+
+.DialogTitle {
+  @apply
+  font-medium
+  text-lg
+  m-0;
+}
+
+.DialogDescription {
+  @apply
+  text-sm
+  mt-3 mx-0 mb-5;
+}
+
+.Button {
+  @apply
+  inline-flex
+  items-center
+  justify-center
+  font-bold
+  rounded
+  px-4
+  h-9
+  text-violet-600
+  bg-violet-200
+  transition-all;
+}
+
+.Button:hover, .IconButton:hover {
+  opacity: 0.75;
+}
+
+.Button:focus, .IconButton:focus {
+  @apply
+  outline-2
+  outline-violet-600;
+}
+
+.IconButton {
+  @apply
+  inline-flex
+  items-center
+  justify-center
+  text-violet-500
+  w-6
+  h-6
+  absolute
+  top-5
+  right-5
+  rounded-full
+  transition-all;
+}
+
+@keyframes overlayShow {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes contentShow {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -48%) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}

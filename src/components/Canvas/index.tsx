@@ -30,6 +30,7 @@ import NodeInMouse from '../NodeInMouse';
 import CustomContextMenu from '../ContextMenu';
 import useSelectNode from '../../hooks/useSelectNode';
 import { LOCAL_STORAGE, getItems, saveItems } from '../../utils/localStorage';
+import ConfirmationDialog from '../ConfirmationDialog';
 
 export type NodesTypes = keyof typeof NODE_TYPES | undefined
 
@@ -231,11 +232,10 @@ export function Canvas() {
               <Toolbar.Button onClick={() => handleSelectNewNode(defaultNodes.circle)} className="toolbarNode bg-blue-500 rounded-full" />
             </Toolbar.Root>
           </Panel>
-
         </ReactFlow>
+
         <NodeInMouse position={mousePosition} element={elementSelected} />
       </CustomContextMenu>
-
     </>
   );
 }
