@@ -1,6 +1,6 @@
 import { Node } from "reactflow";
-import { NodesTypes } from "./Canvas"
-import { DefaultNode } from "./Nodes/DefaultNode";
+import { NodesTypes } from "../Canvas"
+import { DefaultNode } from "../Nodes/DefaultNode";
 
 type Props = {
   position?: {

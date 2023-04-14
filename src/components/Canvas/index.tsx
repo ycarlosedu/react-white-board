@@ -24,12 +24,12 @@ import ReactFlow, {
 
 import 'reactflow/dist/style.css';
 import '@reactflow/node-resizer/dist/style.css';
-import { DefaultNode } from './Nodes/DefaultNode';
-import { DefaultEdge } from './Edges/DefaultEdge';
-import NodeInMouse from './NodeInMouse';
-import useSelectNode from '../hooks/useSelectNode';
-import { LOCAL_STORAGE, getItems, saveItems } from '../utils/localStorage';
-import CustomContextMenu from './ContextMenu';
+import { DefaultNode } from '../Nodes/DefaultNode';
+import { DefaultEdge } from '../Edges/DefaultEdge';
+import NodeInMouse from '../NodeInMouse';
+import CustomContextMenu from '../ContextMenu';
+import useSelectNode from '../../hooks/useSelectNode';
+import { LOCAL_STORAGE, getItems, saveItems } from '../../utils/localStorage';
 
 export type NodesTypes = keyof typeof NODE_TYPES | undefined
 
@@ -46,7 +46,8 @@ const defaultNodes = {
   square: { 
     id: crypto.randomUUID().toString(),
     data: {
-      label: ''
+      label: '',
+      labelColor: 'purple'
     },
     position,
     type: 'square',
@@ -209,17 +210,20 @@ export function Canvas() {
           <MiniMap />
           <Controls /> 
           <Background gap={12} size={2} color={zinc['200']} />
+
           <Panel position="top-center">White Board React</Panel>
+
+          <Panel position="bottom-center">
+            <Toolbar.Root className="flex gap-2 bg-white rounded-2xl shadow-lg border border-zinc-300 px-8 h-20 w-auto overflow-hidden">
+              <Toolbar.Button onClick={() => handleSelectNewNode(defaultNodes.square)} className="toolbarNode bg-violet-500  rounded" />
+              <Toolbar.Button onClick={() => handleSelectNewNode(defaultNodes.circle)} className="toolbarNode bg-blue-500 rounded-full" />
+            </Toolbar.Root>
+          </Panel>
+
         </ReactFlow>
       </CustomContextMenu>
 
-
       <NodeInMouse position={mousePosition} element={elementSelected} />
-
-      <Toolbar.Root className="fixed bottom-10 flex gap-2 left-1/2 -translate-x-1/2 bg-white rounded-2xl shadow-lg border border-zinc-300 px-8 h-20 w-auto overflow-hidden">
-        <Toolbar.Button onClick={() => handleSelectNewNode(defaultNodes.square)} className="text-zinc-400 w-32 h-32 bg-violet-500 mt-6 rounded hover:-translate-y-2 transition-transform" />
-        <Toolbar.Button onClick={() => handleSelectNewNode(defaultNodes.circle)} className="text-zinc-400 w-32 h-32 bg-blue-500 mt-6 rounded-full hover:-translate-y-2 transition-transform" />
-      </Toolbar.Root>
     </>
   );
 }

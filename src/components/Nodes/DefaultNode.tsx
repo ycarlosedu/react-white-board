@@ -95,20 +95,20 @@ export function DefaultNode({ id, selected, resizer = true, handlers = true, def
     <>
     <NodeToolbar isVisible={selected} className='flex gap-2'>
       <Tooltip text="Delete Node">
-        <button onClick={handleDeleteNode} className='bg-white p-2 border border-zinc-500 rounded-full hover:bg-zinc-100'>
+        <button onClick={handleDeleteNode} className='toolbarButton'>
           <Trash size={24}/>
         </button>
       </Tooltip>
 
       <Tooltip text="Copy Node">
-        <button onClick={() => useSelectNode(node!, storeApi)} className='bg-white p-2 border border-zinc-500 rounded-full hover:bg-zinc-100'>
+        <button onClick={() => useSelectNode(node!, storeApi)} className='toolbarButton'>
           <Copy size={24} />
         </button>
       </Tooltip>
 
       <Dropdown tooltip="Change Node Type" items={itemsNodeType}>
         <button 
-          className='bg-white p-2 border border-zinc-500 rounded-full hover:bg-zinc-100'
+          className='toolbarButton'
           aria-label="Change Node Type">
           <GridFour size={24} />
         </button>
@@ -116,32 +116,35 @@ export function DefaultNode({ id, selected, resizer = true, handlers = true, def
 
       <Tooltip text="Change Label Color">
         <div
-          className="bg-white p-2 border w-16 border-zinc-500 rounded-full flex items-center justify-center gap-1 hover:bg-zinc-100"
+          className="toolbarButton w-16"
         >
           <PaintBucket size={16} color={labelColorValue} />
           <input
             value={labelColorValue}
             onChange={handleChangeLabelColor}
-            type="color" className="w-1/2 h-full bg-transparent" 
+            type="color" className="toolbarInput" 
           />
         </div>
       </Tooltip>
 
       <Tooltip text="Change Font Color">
         <div
-          className="bg-white p-2 border w-16 border-zinc-500 rounded-full flex items-center justify-center gap-1 hover:bg-zinc-100"
+          className="toolbarButton w-16"
         >
           <At size={16} color={fontColorValue} />
           <input
             value={fontColorValue}
             onChange={handleChangeFontColor}
-            type="color" className="w-1/2 h-full bg-transparent" 
+            type="color" className="toolbarInput" 
           />
         </div>
       </Tooltip>
     </NodeToolbar>
 
-    <div style={{...style, minHeight, color: fontColorValue, backgroundColor: labelColorValue}} className={`${nodeStyle} group box-border min-w-[${defaultWidth}px] ${resizer ? 'w-full h-full' : ''}`}>
+    <div 
+      style={{...style, minHeight, color: fontColorValue, backgroundColor: labelColorValue, minWidth: defaultWidth}} 
+      className={`${nodeStyle} group box-border w-full h-full}`}
+    >
       <textarea 
         ref={textAreaRef}
         rows={1}

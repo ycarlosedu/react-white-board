@@ -6,6 +6,10 @@ import { Dot } from "@phosphor-icons/react";
 type Props = {
   children: React.ReactNode
 }
+
+const handleReload = () => {
+  window.location.reload();
+}
 export default function CustomContextMenu({ children }: Props) {
   const [bookmarksChecked, setBookmarksChecked] = useState(true);
   const [urlsChecked, setUrlsChecked] = useState(false);
@@ -15,52 +19,53 @@ export default function CustomContextMenu({ children }: Props) {
     <ContextMenu.Root>
       <ContextMenu.Trigger>{children}</ContextMenu.Trigger>
       <ContextMenu.Portal>
-        <ContextMenu.Content className="min-w-[220px] border border-zinc-200 bg-white rounded overflow-hidden p-1 shadow-lg">
-          <ContextMenu.Item className="text-sm rounded flex items-center h-6 pr-1 relative pl-6 outline-none select-none hover:bg-zinc-400">
-            Back <div className="ml-auto pl-5">⌘+[</div>
+        <ContextMenu.Content className="contextContent">
+          <ContextMenu.Item disabled className="contextItem">
+            Back <div className="contextItemRight">⌘+[</div>
           </ContextMenu.Item>
-          <ContextMenu.Item className="text-sm rounded flex items-center h-6 pr-1 relative pl-6 outline-none select-none hover:bg-zinc-400" disabled>
-            Foward <div className="ml-auto pl-5">⌘+]</div>
+          <ContextMenu.Item disabled className="contextItem">
+            Foward <div className="contextItemRight">⌘+]</div>
           </ContextMenu.Item>
-          <ContextMenu.Item className="text-sm rounded flex items-center h-6 pr-1 relative pl-6 outline-none select-none hover:bg-zinc-400">
-            Reload <div className="ml-auto pl-5">⌘+R</div>
+          <ContextMenu.Item onClick={handleReload} className="contextItem">
+            Reload <div className="contextItemRight">⌘+R</div>
           </ContextMenu.Item>
 
-          <ContextMenu.Separator className="h-[1px] bg-zinc-200 m-1" />
+          <ContextMenu.Separator className="separator" />
 
           <ContextMenu.CheckboxItem
-            className="rounded flex items-center text-sm h-6 pr-1 relative pl-6 outline-none select-none hover:bg-zinc-400"
+            className="contextItem"
             checked={bookmarksChecked}
             onCheckedChange={setBookmarksChecked}
+            disabled
           >
-            <ContextMenu.ItemIndicator className="absolute left-0 w-6 inline-flex items-center justify-center">
+            <ContextMenu.ItemIndicator className="itemIndicator">
               <Check size={16} />
             </ContextMenu.ItemIndicator>
-            Show Bookmarks <div className="ml-auto pl-5">⌘+B</div>
+            Show Bookmarks <div className="contextItemRight">⌘+B</div>
           </ContextMenu.CheckboxItem>
           <ContextMenu.CheckboxItem
-            className="rounded flex items-center text-sm h-6 pr-1 relative pl-6 outline-none select-none hover:bg-zinc-400"
+            className="contextItem"
             checked={urlsChecked}
             onCheckedChange={setUrlsChecked}
           >
-            <ContextMenu.ItemIndicator className="absolute left-0 w-6 inline-flex items-center justify-center">
+            <ContextMenu.ItemIndicator className="itemIndicator">
               <Check size={16} />
             </ContextMenu.ItemIndicator>
             Show Full URLs
           </ContextMenu.CheckboxItem>
 
-          <ContextMenu.Separator className="h-[1px] bg-zinc-200 m-1" />
+          <ContextMenu.Separator className="separator" />
 
-          <ContextMenu.Label className="pl-6 text-xs text-zinc-400">People</ContextMenu.Label>
+          <ContextMenu.Label className="label">People</ContextMenu.Label>
           <ContextMenu.RadioGroup value={person} onValueChange={setPerson}>
-            <ContextMenu.RadioItem className="text-sm rounded flex items-center h-6 pr-1 relative pl-6 outline-none select-none hover:bg-zinc-400" value="pedro">
-              <ContextMenu.ItemIndicator className="absolute left-0 w-6 inline-flex items-center justify-center">
+            <ContextMenu.RadioItem className="contextItem" value="pedro">
+              <ContextMenu.ItemIndicator className="itemIndicator">
                 <Dot size={24} />
               </ContextMenu.ItemIndicator>
               Pedro Duarte
             </ContextMenu.RadioItem>
-            <ContextMenu.RadioItem className="text-sm rounded flex items-center h-6 pr-1 relative pl-6 outline-none select-none hover:bg-zinc-400" value="colm">
-              <ContextMenu.ItemIndicator className="absolute left-0 w-6 inline-flex items-center justify-center">
+            <ContextMenu.RadioItem className="contextItem" value="colm">
+              <ContextMenu.ItemIndicator className="itemIndicator">
                 <Dot size={24} />
               </ContextMenu.ItemIndicator>
               Colm Tuite

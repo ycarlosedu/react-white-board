@@ -1,0 +1,8 @@
+.toolbarNode {
+  @apply
+  text-zinc-400 
+  w-32 
+  h-32
+  mt-6
+  hover:-translate-y-2 transition-transform
+}

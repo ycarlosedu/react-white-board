@@ -1,0 +1,71 @@
+.contextContent {
+  @apply
+  min-w-[220px] 
+  border 
+  border-zinc-200 
+  bg-white 
+  rounded 
+  overflow-hidden 
+  p-1 
+  shadow-lg
+}
+
+.separator {
+  @apply 
+  h-[1px] 
+  bg-zinc-200 
+  m-1 
+}
+
+.contextItem {
+  @apply 
+  text-sm 
+  rounded 
+  flex 
+  items-center 
+  h-6 
+  pr-1 
+  pl-6 
+  relative 
+  outline-none 
+  select-none
+}
+
+.contextItem:hover {
+  @apply 
+  bg-zinc-400
+}
+
+.contextItem[data-disabled] {
+  @apply 
+  text-zinc-400
+}
+
+.contextItem[data-disabled]:hover {
+  @apply 
+  bg-zinc-200
+}
+
+.contextItemRight {
+  @apply 
+  ml-auto 
+  pl-5
+}
+
+.itemIndicator {
+  @apply 
+  absolute 
+  left-0 
+  w-6 
+  inline-flex 
+  items-center 
+  justify-center
+}
+
+.label {
+  @apply 
+  pl-6 
+  text-xs 
+  text-zinc-400
+}
+

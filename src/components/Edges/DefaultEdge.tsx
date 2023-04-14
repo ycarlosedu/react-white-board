@@ -7,7 +7,8 @@ import Dropdown from "../Dropdown";
 export const labelColors = {
   yellow: "#ffcc00",
   red: "#ff0000",
-  blue: "#008cff",
+  blue: "#3B82F6",
+  purple: "#8B5CF6",
   transparent: "rgba(0, 0, 0, 0)",
 }
 
@@ -169,6 +170,8 @@ export function DefaultEdge({
       checked: borderStyleValue === 'solid'
     }
   ]
+
+  const interactiveItem = "nodrag nopan pointer-events-auto"
   
   return (
     <>
@@ -186,7 +189,7 @@ export function DefaultEdge({
             border: `2px ${borderStyleValue} ${labelColorValue}`,
             color: fontColorValue,
           }}
-          className="nodrag nopan pointer-events-auto p-1 min-w-0 rounded font-bold text-xs absolute"
+          className={`${interactiveItem} p-1 min-w-0 rounded font-bold text-xs absolute`}
         >
           <input 
             maxLength={20} 
@@ -194,7 +197,7 @@ export function DefaultEdge({
             onBlur={handleUpdateEdge} 
             type="text" 
             value={labelValue} 
-            className='nopan pointer-events-auto w-full min-w-0 bg-transparent text-center outline-none' 
+            className={`${interactiveItem} w-full min-w-0 bg-transparent text-center outline-none`}
           />
 
           {selected && (
@@ -203,7 +206,7 @@ export function DefaultEdge({
             >
               <Tooltip text="Delete Edge">
                 <button
-                  className="nopan pointer-events-auto px-1 border-zinc-300 w-6 h-full flex gap-1 items-center justify-center text-xs text-black transition-all hover:bg-zinc-200"
+                  className={`${interactiveItem} edgeButton`}
                   onClick={onEdgeDelete}
                 >
                   <Trash size={16} color="#cb1818" />
@@ -212,7 +215,7 @@ export function DefaultEdge({
 
               <Dropdown tooltip="Change Edge Type" items={itemsEdgeType}>
                 <button 
-                  className="nopan pointer-events-auto px-1 border-zinc-300 w-6 h-full flex gap-1 items-center justify-center text-xs text-black transition-all hover:bg-zinc-200"
+                  className={`${interactiveItem} edgeButton`}
                   aria-label="Change Edge Type">
                   <BezierCurve size={16} />
                 </button>
@@ -220,7 +223,7 @@ export function DefaultEdge({
 
               <Dropdown tooltip="Change Border Style" items={itemsBorderStyle}>
                 <button 
-                  className="nopan pointer-events-auto px-1 border-zinc-300 w-6 h-full flex gap-1 items-center justify-center text-xs text-black transition-all hover:bg-zinc-200"
+                  className={`${interactiveItem} edgeButton`}
                   aria-label="Change Border Style">
                   <GridFour size={16} />
                 </button>
@@ -228,26 +231,26 @@ export function DefaultEdge({
 
               <Tooltip text="Change Border Color">
                 <div
-                  className="nopan pointer-events-auto px-1 border-zinc-300 w-12 h-full flex gap-1 items-center justify-center text-xs text-black transition-all hover:bg-zinc-200"
+                  className={`${interactiveItem} edgeButton w-12`}
                 >
                   <PaintBucket size={16} color={labelColorValue} />
                   <input
                     value={labelColorValue}
                     onChange={handleOnChangeBgValue}
-                    type="color" className="nopan pointer-events-auto w-1/2 h-full bg-transparent" 
+                    type="color" className={`${interactiveItem} toolbarInput`}
                   />
                 </div>
               </Tooltip>
 
               <Tooltip text="Change Font Color">
                 <div
-                  className="nopan pointer-events-auto px-1 border-zinc-300 w-12 h-full flex gap-1 items-center justify-center text-xs text-black transition-all hover:bg-zinc-200"
+                  className={`${interactiveItem} edgeButton w-12`}
                 >
                   <At size={16} color={fontColorValue} />
                   <input
                     value={fontColorValue}
                     onChange={handleOnChangeFontValue}
-                    type="color" className="nopan pointer-events-auto w-1/2 h-full bg-transparent" 
+                    type="color" className={`${interactiveItem} toolbarInput`}
                   />
                 </div>
               </Tooltip>
