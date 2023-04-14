@@ -1,5 +1,5 @@
 import {useRef, useState} from 'react'
-import { NodeProps, NodeToolbar, useReactFlow, useStore, useStoreApi } from 'reactflow';
+import { NodeProps, NodeToolbar, useReactFlow, useStoreApi } from 'reactflow';
 import { NodeResizer } from '@reactflow/node-resizer';
 import { Handlers } from './Handlers';
 import useAutosizeTextArea from '../../hooks/useAutosizeTextArea';
@@ -9,7 +9,7 @@ import useSelectNode from '../../hooks/useSelectNode';
 import { NodesTypes } from '../Canvas';
 import Dropdown from '../Dropdown';
 import { At, GridFour, PaintBucket } from 'phosphor-react';
-import { FontColors, LabelColors, fontColors, labelColors } from '../Edges/DefaultEdge';
+import { getFontColor, getLabelColor } from '../../constants';
 
 type Props = Partial<NodeProps> & {
   resizer?: boolean;
@@ -24,13 +24,10 @@ const NODES_CLASSNAMES = {
 }
 
 export function DefaultNode({ id, selected, resizer = true, handlers = true, defaultWidth = 200, style, data, type }: Props) {
-  const labelColor = labelColors[data?.labelColor as LabelColors] as string || labelColors.blue
-  const fontColor = fontColors[data?.fontColor as FontColors] as string || fontColors.black
-
   const [labelValue, setLabelValue] = useState(data?.label)
   const [nodeType, setNodeType] = useState(type)
-  const [labelColorValue, setLabelColorValue] = useState(labelColor)
-  const [fontColorValue, setFontColorValue] = useState(fontColor)
+  const [labelColorValue, setLabelColorValue] = useState(getLabelColor(data?.labelColor))
+  const [fontColorValue, setFontColorValue] = useState(getFontColor(data?.fontColor))
 
   const { getNode, setNodes, deleteElements } = useReactFlow()
   const node = getNode(id!)

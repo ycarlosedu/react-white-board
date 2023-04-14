@@ -3,25 +3,7 @@ import { Trash, PaintBucket, BezierCurve, At, GridFour } from "phosphor-react";
 import { EdgeLabelRenderer, EdgeProps, addEdge, getSimpleBezierPath, getSmoothStepPath, getStraightPath, useReactFlow } from "reactflow";
 import Tooltip from "../Tooltip";
 import Dropdown from "../Dropdown";
-
-export const labelColors = {
-  yellow: "#ffcc00",
-  red: "#ff0000",
-  blue: "#3B82F6",
-  purple: "#8B5CF6",
-  transparent: "rgba(0, 0, 0, 0)",
-}
-
-export type LabelColors = keyof typeof labelColors;
-
-export const fontColors = {
-  yellow: "#ffcc00",
-  red: "#ff0000",
-  blue: "#008cff",
-  black: "#000",
-}
-
-export type FontColors = keyof typeof fontColors;
+import { getFontColor, getLabelColor } from "../../constants";
 
 const getEdgeType = {
   default: getSmoothStepPath,
@@ -59,15 +41,11 @@ export function DefaultEdge({
     targetPosition,
   });
 
-  const labelColor = labelColors[data?.labelColor as LabelColors] as string || labelColors.blue
-  const fontColor = fontColors[data?.fontColor as FontColors] as string || fontColors.black
-
   const [labelValue, setLabelValue] = useState(data?.label)
-  const [labelColorValue, setLabelColorValue] = useState(labelColor)
-  const [fontColorValue, setFontColorValue] = useState(fontColor)
-  const [isLabelAnimated, setIsLabelAnimated] = useState(animated)
-  // console.log(animated)
+  const [labelColorValue, setLabelColorValue] = useState(getLabelColor(data?.labelColor))
+  const [fontColorValue, setFontColorValue] = useState(getFontColor(data?.fontColor))
   const [borderStyleValue, setBorderStyleValue] = useState(data?.borderStyle || 'none')
+  const [isLabelAnimated, setIsLabelAnimated] = useState(animated) // TODO: NOT WORKING
 
   const { deleteElements, getEdge, setEdges } = useReactFlow()
   const edge = getEdge(id)
