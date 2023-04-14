@@ -29,6 +29,7 @@ import { DefaultEdge } from './Edges/DefaultEdge';
 import NodeInMouse from './NodeInMouse';
 import useSelectNode from '../hooks/useSelectNode';
 import { LOCAL_STORAGE, getItems, saveItems } from '../utils/localStorage';
+import CustomContextMenu from './ContextMenu';
 
 export type NodesTypes = keyof typeof NODE_TYPES | undefined
 
@@ -152,8 +153,8 @@ export function Canvas() {
   function getCoordinates(event: any) {
     const bounds = reactFlowRef.current.getBoundingClientRect();
     return reactFlowInstance.project({
-      x: event.clientX - bounds.left - 50,
-      y: event.clientY - bounds.top - 50
+      x: event.clientX - bounds.left,
+      y: event.clientY - bounds.top
     });
   }
 
@@ -183,33 +184,35 @@ export function Canvas() {
 
   return (
     <>
-      <ReactFlow
-        ref={reactFlowRef}
-        nodeTypes={NODE_TYPES}
-        edgeTypes={EDGE_TYPES}
-        nodes={nodes}
-        edges={edges}
-        onNodesChange={onNodesChange}
-        onNodesDelete={onNodesDelete}
-        onEdgesChange={onEdgesChange}
-        onConnect={onConnect}
-        connectionMode={ConnectionMode.Loose}
-        defaultEdgeOptions={{
-          data: {
-            type: 'default'
-          }
-        }}
-        onPaneClick={handleAddNode}
-        onMouseMove={handleMouseMove}
-        snapToGrid={true}
-        fitView
-      >
-        <MiniMap />
-        <Controls /> 
-        <Background gap={12} size={2} color={zinc['200']} />
+      <CustomContextMenu>
+        <ReactFlow
+          ref={reactFlowRef}
+          nodeTypes={NODE_TYPES}
+          edgeTypes={EDGE_TYPES}
+          nodes={nodes}
+          edges={edges}
+          onNodesChange={onNodesChange}
+          onNodesDelete={onNodesDelete}
+          onEdgesChange={onEdgesChange}
+          onConnect={onConnect}
+          connectionMode={ConnectionMode.Loose}
+          defaultEdgeOptions={{
+            data: {
+              type: 'default'
+            }
+          }}
+          onPaneClick={handleAddNode}
+          onMouseMove={handleMouseMove}
+          snapToGrid={true}
+          fitView
+        >
+          <MiniMap />
+          <Controls /> 
+          <Background gap={12} size={2} color={zinc['200']} />
+          <Panel position="top-center">White Board React</Panel>
+        </ReactFlow>
+      </CustomContextMenu>
 
-        <Panel position="top-center">White Board React</Panel>
-      </ReactFlow>
 
       <NodeInMouse position={mousePosition} element={elementSelected} />
 
