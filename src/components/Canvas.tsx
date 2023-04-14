@@ -97,8 +97,8 @@ const EDGE_TYPES = {
 export const getElementSelected = (state: any) => state.elementSelected;
 
 export function Canvas() {
-  const [nodes, setNodes, onNodesChange] = useNodesState(getItems(LOCAL_STORAGE.NODES));
-  const [edges, setEdges, onEdgesChange] = useEdgesState(getItems(LOCAL_STORAGE.EDGES));
+  const [nodes, setNodes, onNodesChange] = useNodesState(getItems(LOCAL_STORAGE.NODES, []));
+  const [edges, setEdges, onEdgesChange] = useEdgesState(getItems(LOCAL_STORAGE.EDGES, []));
   const [mousePosition, setMousePosition] = useState<{ top: number; left: number; }>();
 
   useEffect(() => {
