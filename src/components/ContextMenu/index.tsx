@@ -5,21 +5,25 @@ import { Dot } from "@phosphor-icons/react";
 
 type Props = {
   children: React.ReactNode
+  onDeleteAllNodes: () => void;
+  onDeleteAllEdges: () => void;
+  onMouseMove: (event: any) => void;
 }
 
 const handleReload = () => {
   window.location.reload();
 }
-export default function CustomContextMenu({ children }: Props) {
+export default function CustomContextMenu({ children, onDeleteAllNodes, onDeleteAllEdges, onMouseMove }: Props) {
   const [bookmarksChecked, setBookmarksChecked] = useState(true);
   const [urlsChecked, setUrlsChecked] = useState(false);
   const [person, setPerson] = useState('pedro');
 
   return (
     <ContextMenu.Root>
-      <ContextMenu.Trigger>{children}</ContextMenu.Trigger>
+      <ContextMenu.Trigger onMouseMove={onMouseMove}>{children}</ContextMenu.Trigger>
       <ContextMenu.Portal>
         <ContextMenu.Content className="contextContent">
+
           <ContextMenu.Item disabled className="contextItem">
             Back <div className="contextItemRight">⌘+[</div>
           </ContextMenu.Item>
@@ -28,6 +32,15 @@ export default function CustomContextMenu({ children }: Props) {
           </ContextMenu.Item>
           <ContextMenu.Item onClick={handleReload} className="contextItem">
             Reload <div className="contextItemRight">⌘+R</div>
+          </ContextMenu.Item>
+
+          <ContextMenu.Separator className="separator" />
+
+          <ContextMenu.Item onClick={onDeleteAllNodes} className="contextItem hover:bg-red-600">
+            Delete all Nodes and Edges
+          </ContextMenu.Item>
+          <ContextMenu.Item onClick={onDeleteAllEdges} className="contextItem hover:bg-red-600">
+            Delete all Edges
           </ContextMenu.Item>
 
           <ContextMenu.Separator className="separator" />

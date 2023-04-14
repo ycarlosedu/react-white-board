@@ -183,9 +183,22 @@ export function Canvas() {
     element === elementSelected ? useSelectNode(undefined, storeApi) : useSelectNode(element, storeApi)
   }
 
+  function handleDeleteAllNodes() {
+    setNodes([])
+    handleDeleteAllEdges()
+  }
+
+  function handleDeleteAllEdges() {
+    setEdges([])
+  }
+
   return (
     <>
-      <CustomContextMenu>
+      <CustomContextMenu 
+        onMouseMove={handleMouseMove}
+        onDeleteAllNodes={handleDeleteAllNodes} 
+        onDeleteAllEdges={handleDeleteAllEdges}
+      >
         <ReactFlow
           ref={reactFlowRef}
           nodeTypes={NODE_TYPES}
@@ -203,7 +216,6 @@ export function Canvas() {
             }
           }}
           onPaneClick={handleAddNode}
-          onMouseMove={handleMouseMove}
           snapToGrid={true}
           fitView
         >
@@ -221,9 +233,9 @@ export function Canvas() {
           </Panel>
 
         </ReactFlow>
+        <NodeInMouse position={mousePosition} element={elementSelected} />
       </CustomContextMenu>
 
-      <NodeInMouse position={mousePosition} element={elementSelected} />
     </>
   );
 }
