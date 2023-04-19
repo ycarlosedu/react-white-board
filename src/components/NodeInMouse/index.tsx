@@ -1,4 +1,4 @@
-import { Node } from "reactflow";
+import { Node, useReactFlow } from "reactflow";
 import { NodesTypes } from "../Canvas"
 import { DefaultNode } from "../Nodes/DefaultNode";
 
@@ -12,6 +12,8 @@ type Props = {
 
 export default function NodeInMouse({ position = { top: 0, left: 0 }, element }: Props) {
   if (!element?.type) return null
+  
+  const { getZoom } = useReactFlow()
 
   const NODES = {
     square: (props: any) => DefaultNode({...element, ...props}),
@@ -22,7 +24,7 @@ export default function NodeInMouse({ position = { top: 0, left: 0 }, element }:
   
   return (
     <>
-      <LazyNode style={{top: position.top, left: position.left, opacity: 0.5, position: 'fixed'}} resizer={false} handlers={false} defaultWidth={50} />
+      <LazyNode style={{top: position.top, left: position.left, opacity: 0.5, position: 'fixed'}} resizer={false} handlers={false} defaultWidth={200 * getZoom()} />
     </>
   )
 }

@@ -19,8 +19,8 @@ type Props = Partial<NodeProps> & {
 }
 
 const NODES_CLASSNAMES = {
-  square: 'rounded p-4',
-  circle: 'rounded-full p-20',
+  square: 'squareNode',
+  circle: 'circleNode',
 }
 
 export function DefaultNode({ id, selected, resizer = true, handlers = true, defaultWidth = 200, style, data, type }: Props) {
@@ -140,16 +140,18 @@ export function DefaultNode({ id, selected, resizer = true, handlers = true, def
 
     <div 
       style={{...style, minHeight, color: fontColorValue, backgroundColor: labelColorValue, minWidth: defaultWidth}} 
-      className={`${nodeStyle} group box-border w-full h-full}`}
+      className={`${nodeStyle}  box-border ${resizer ? 'w-full h-full' : ''} `}
     >
-      <textarea 
-        ref={textAreaRef}
-        rows={1}
-        onBlur={handleUpdateNode} 
-        onChange={handleOnChange} 
-        value={labelValue} 
-        className="bg-transparent outline-none resize-none w-full" 
-      />
+      {resizer && (
+        <textarea 
+          ref={textAreaRef}
+          rows={1}
+          onBlur={handleUpdateNode} 
+          onChange={handleOnChange} 
+          value={labelValue} 
+          className="bg-transparent outline-none w-full resize-none" 
+        />
+      )}
       
       {resizer && (
         <NodeResizer 

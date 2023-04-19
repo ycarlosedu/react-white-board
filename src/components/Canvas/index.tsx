@@ -30,7 +30,6 @@ import NodeInMouse from '../NodeInMouse';
 import CustomContextMenu from '../ContextMenu';
 import useSelectNode from '../../hooks/useSelectNode';
 import { LOCAL_STORAGE, getItems, saveItems } from '../../utils/localStorage';
-import ConfirmationDialog from '../ConfirmationDialog';
 
 export type NodesTypes = keyof typeof NODE_TYPES | undefined
 

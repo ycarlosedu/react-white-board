@@ -18,3 +18,15 @@
   h-full 
   bg-transparent
 }
+
+.squareNode {
+  @apply
+  rounded 
+  p-4
+}
+
+.circleNode {
+  @apply
+  rounded-full 
+  p-4
+}
